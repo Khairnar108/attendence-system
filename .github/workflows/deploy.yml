@@ -1,0 +1,51 @@
+name: Deploy Attendance Control System to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  S3_BUCKET: ${{ secrets.S3_BUCKET_NAME }}
+  CODEDEPLOY_APP_NAME: ${{ secrets.CODEDEPLOY_APP_NAME }}
+  CODEDEPLOY_GROUP_NAME: ${{ secrets.CODEDEPLOY_GROUP_NAME }}
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies (sanity check / run tests here if you add them)
+        run: pip install -r requirements.txt
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Create deployment package
+        run: zip -r deploy-package.zip . -x ".git/*" ".github/*" "venv/*" "instance/*" "__pycache__/*"
+
+      - name: Upload package to S3
+        run: |
+          aws s3 cp deploy-package.zip s3://${{ env.S3_BUCKET }}/deploy-package-${{ github.sha }}.zip
+
+      - name: Trigger AWS CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ env.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ env.CODEDEPLOY_GROUP_NAME }} \
+            --s3-location bucket=${{ env.S3_BUCKET }},bundleType=zip,key=deploy-package-${{ github.sha }}.zip \
+            --file-exists-behavior OVERWRITE

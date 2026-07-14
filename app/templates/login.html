@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content_unauth %}
+<div class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-mark">REG</div>
+    <p class="auth-eyebrow">Attendance Control Register</p>
+    <h1>Sign in to clock in</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}" class="auth-form">
+      <label>
+        <span>Login ID</span>
+        <input type="text" name="username" autocomplete="username" required autofocus />
+      </label>
+      <label>
+        <span>Passcode</span>
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <button type="submit">Sign in</button>
+    </form>
+
+    <p class="auth-footnote">Lost your passcode? Ask your administrator to reset it from the Roster.</p>
+  </div>
+</div>
+{% endblock %}

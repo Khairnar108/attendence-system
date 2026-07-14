@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">{{ today.strftime('%A, %d %B %Y') }}</p>
+    <h1>Overview</h1>
+  </div>
+  <div class="page-actions">
+    <a href="{{ url_for('admin.attendance') }}" class="btn btn-primary">Open today's ledger</a>
+  </div>
+</div>
+
+<div class="stat-row">
+  <div class="stat-tile tile-total">
+    <span class="stat-label">Active roster</span>
+    <span class="stat-value">{{ total_employees }}</span>
+  </div>
+  <div class="stat-tile tile-present">
+    <span class="stat-label">Present today</span>
+    <span class="stat-value">{{ present_today }}</span>
+  </div>
+  <div class="stat-tile tile-absent">
+    <span class="stat-label">Absent today</span>
+    <span class="stat-value">{{ absent_today }}</span>
+  </div>
+  <div class="stat-tile tile-leave">
+    <span class="stat-label">On leave</span>
+    <span class="stat-value">{{ leave_today }}</span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Roster by department</h2>
+  {% if departments %}
+  <div class="chip-row">
+    {% for dept, count in departments.items() %}
+      <span class="chip"><strong>{{ count }}</strong> {{ dept }}</span>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No employees added yet.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Recent punches</h2>
+  {% if recent_activity %}
+  <table class="ledger">
+    <thead>
+      <tr><th>Employee</th><th>Department</th><th>Date</th><th>In</th><th>Out</th></tr>
+    </thead>
+    <tbody>
+      {% for r in recent_activity %}
+      <tr>
+        <td><span class="emp-name">{{ r.employee.name }}</span><br><span class="emp-code">{{ r.employee.employee_code }}</span></td>
+        <td>{{ r.employee.department }}</td>
+        <td class="mono">{{ r.date.strftime('%d %b') }}</td>
+        <td class="mono">{{ r.check_in.strftime('%H:%M:%S') if r.check_in else '—' }}</td>
+        <td class="mono">{{ r.check_out.strftime('%H:%M:%S') if r.check_out else '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No punches recorded yet.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

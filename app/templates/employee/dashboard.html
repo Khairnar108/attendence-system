@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Punch Clock{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">{{ employee.department }} · {{ employee.designation }}</p>
+    <h1>Punch Clock</h1>
+  </div>
+</div>
+
+<div class="punch-clock">
+  <div class="punch-time-block">
+    <span class="punch-date">{{ today.strftime('%A, %d %B %Y') }}</span>
+    <span class="punch-clock-face" id="liveClock">--:--:--</span>
+  </div>
+
+  <div class="punch-status-block">
+    <div class="punch-stamp-line">
+      <span class="punch-stamp-label">In</span>
+      <span class="punch-stamp-value {{ '' if today_record and today_record.check_in else 'pending' }}">
+        {{ today_record.check_in.strftime('%H:%M:%S') if today_record and today_record.check_in else '— : — : —' }}
+      </span>
+    </div>
+    <div class="punch-stamp-line">
+      <span class="punch-stamp-label">Out</span>
+      <span class="punch-stamp-value {{ '' if today_record and today_record.check_out else 'pending' }}">
+        {{ today_record.check_out.strftime('%H:%M:%S') if today_record and today_record.check_out else '— : — : —' }}
+      </span>
+    </div>
+
+    <div class="punch-actions">
+      <form method="POST" action="{{ url_for('employee.punch_in') }}">
+        <button class="btn btn-stamp" type="submit" {{ 'disabled' if today_record and today_record.check_in }}>Punch In</button>
+      </form>
+      <form method="POST" action="{{ url_for('employee.punch_out') }}">
+        <button class="btn btn-stamp" type="submit" {{ 'disabled' if not today_record or not today_record.check_in or today_record.check_out }}>Punch Out</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Last 7 entries</h2>
+  {% if recent %}
+    {% for r in recent %}
+      <div class="register-line">
+        <span class="register-day">{{ r.date.strftime('%d %b') }}</span>
+        <span class="register-times">
+          {% if r.check_in %}{{ r.check_in.strftime('%H:%M:%S') }}{% else %}—{% endif %}
+          <span class="sep">→</span>
+          {% if r.check_out %}{{ r.check_out.strftime('%H:%M:%S') }}{% else %}—{% endif %}
+          {% if r.hours_worked %}<span class="sep">·</span>{{ r.hours_worked }} hrs{% endif %}
+        </span>
+        <span class="pill pill-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">No entries yet. Punch in above to start your record.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

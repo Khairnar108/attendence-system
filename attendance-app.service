@@ -1,0 +1,15 @@
+[Unit]
+Description=Attendance Control System (Gunicorn)
+After=network.target
+
+[Service]
+User=ec2-user
+WorkingDirectory=/home/ec2-user/attendance-app
+Environment="PATH=/home/ec2-user/attendance-app/venv/bin"
+Environment="SECRET_KEY=change-this-to-a-random-secret-in-production"
+ExecStart=/home/ec2-user/attendance-app/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:3000 run:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

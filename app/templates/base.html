@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{% block title %}Timesheet{% endblock %} · Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark">REG</span>
+      <div class="brand-text">
+        <strong>Register</strong>
+        <span>Attendance Control</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      {% if current_user.is_admin %}
+        <span class="nav-eyebrow">Administration</span>
+        <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">Overview</a>
+        <a href="{{ url_for('admin.employees') }}" class="{{ 'active' if request.endpoint in ['admin.employees','admin.new_employee','admin.edit_employee'] }}">Roster</a>
+        <a href="{{ url_for('admin.attendance') }}" class="{{ 'active' if request.endpoint in ['admin.attendance'] }}">Daily Ledger</a>
+      {% else %}
+        <span class="nav-eyebrow">My Timesheet</span>
+        <a href="{{ url_for('employee.dashboard') }}" class="{{ 'active' if request.endpoint == 'employee.dashboard' }}">Punch Clock</a>
+        <a href="{{ url_for('employee.history') }}" class="{{ 'active' if request.endpoint == 'employee.history' }}">History</a>
+      {% endif %}
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="whoami">
+        <span class="whoami-name">{{ current_user.employee.name if current_user.employee else current_user.username }}</span>
+        <span class="whoami-role">{{ 'Administrator' if current_user.is_admin else current_user.employee.designation }}</span>
+      </div>
+      <a href="{{ url_for('auth.logout') }}" class="logout-link">Sign out</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% else %}
+  {% block content_unauth %}{% endblock %}
+{% endif %}
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

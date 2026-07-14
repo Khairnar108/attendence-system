@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Daily Ledger{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Daily Ledger</p>
+    <h1>{{ selected_date }}</h1>
+  </div>
+  <div class="page-actions">
+    <a href="{{ url_for('admin.export_attendance', date=selected_date) }}" class="btn btn-ghost">Export CSV</a>
+  </div>
+</div>
+
+<form class="filter-bar" method="GET">
+  <label>
+    Date
+    <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()" />
+  </label>
+  <label>
+    Department
+    <select name="department" onchange="this.form.submit()">
+      <option value="">All departments</option>
+      {% for d in departments %}
+      <option value="{{ d }}" {{ 'selected' if d == selected_department }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </label>
+</form>
+
+<div class="card">
+  <h2>Marked ({{ records|length }})</h2>
+  {% if records %}
+  <table class="ledger">
+    <thead>
+      <tr><th>Employee</th><th>Department</th><th>In</th><th>Out</th><th>Hours</th><th>Status</th><th>Update</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><span class="emp-name">{{ r.employee.name }}</span><br><span class="emp-code">{{ r.employee.employee_code }}</span></td>
+        <td>{{ r.employee.department }}</td>
+        <td class="mono">{{ r.check_in.strftime('%H:%M:%S') if r.check_in else '—' }}</td>
+        <td class="mono">{{ r.check_out.strftime('%H:%M:%S') if r.check_out else '—' }}</td>
+        <td class="mono">{{ r.hours_worked if r.hours_worked else '—' }}</td>
+        <td><span class="pill pill-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></td>
+        <td>
+          <form method="POST" action="{{ url_for('admin.mark_attendance') }}" style="display:flex; gap:6px;">
+            <input type="hidden" name="employee_id" value="{{ r.employee_id }}" />
+            <input type="hidden" name="date" value="{{ selected_date }}" />
+            <select name="status" onchange="this.form.submit()">
+              <option value="Present" {{ 'selected' if r.status == 'Present' }}>Present</option>
+              <option value="Absent" {{ 'selected' if r.status == 'Absent' }}>Absent</option>
+              <option value="Leave" {{ 'selected' if r.status == 'Leave' }}>Leave</option>
+              <option value="Half Day" {{ 'selected' if r.status == 'Half Day' }}>Half Day</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No one has punched in or been marked for this date yet.</div>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h2>Not yet marked ({{ unmarked|length }})</h2>
+  {% if unmarked %}
+  <table class="ledger">
+    <thead>
+      <tr><th>Employee</th><th>Department</th><th>Mark as</th></tr>
+    </thead>
+    <tbody>
+      {% for e in unmarked %}
+      <tr>
+        <td><span class="emp-name">{{ e.name }}</span><br><span class="emp-code">{{ e.employee_code }}</span></td>
+        <td>{{ e.department }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin.mark_attendance') }}" style="display:flex; gap:6px;">
+            <input type="hidden" name="employee_id" value="{{ e.id }}" />
+            <input type="hidden" name="date" value="{{ selected_date }}" />
+            <select name="status" onchange="this.form.submit()">
+              <option value="" disabled selected>Choose status</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+              <option value="Leave">Leave</option>
+              <option value="Half Day">Half Day</option>
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">Everyone on the active roster has been marked.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

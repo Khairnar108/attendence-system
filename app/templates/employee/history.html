@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">{{ employee.employee_code }}</p>
+    <h1>Attendance History</h1>
+  </div>
+</div>
+
+<form class="filter-bar" method="GET">
+  <label>
+    Month
+    <input type="month" name="month" value="{{ month or '' }}" onchange="this.form.submit()" />
+  </label>
+  {% if month %}<a class="btn btn-ghost btn-sm" href="{{ url_for('employee.history') }}">Clear</a>{% endif %}
+</form>
+
+<div class="card">
+  {% if records %}
+  <table class="ledger">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Hours</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td class="mono">{{ r.date.strftime('%d %b %Y') }}</td>
+        <td class="mono">{{ r.check_in.strftime('%H:%M:%S') if r.check_in else '—' }}</td>
+        <td class="mono">{{ r.check_out.strftime('%H:%M:%S') if r.check_out else '—' }}</td>
+        <td class="mono">{{ r.hours_worked if r.hours_worked else '—' }}</td>
+        <td><span class="pill pill-{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No records for this period.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

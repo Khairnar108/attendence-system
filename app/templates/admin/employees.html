@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Roster{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">{{ employees|length }} on record</p>
+    <h1>Roster</h1>
+  </div>
+  <div class="page-actions">
+    <a href="{{ url_for('admin.new_employee') }}" class="btn btn-primary">Add employee</a>
+  </div>
+</div>
+
+<form class="filter-bar" method="GET">
+  <label>
+    Department
+    <select name="department" onchange="this.form.submit()">
+      <option value="">All departments</option>
+      {% for d in departments %}
+      <option value="{{ d }}" {{ 'selected' if d == selected_department }}>{{ d }}</option>
+      {% endfor %}
+    </select>
+  </label>
+</form>
+
+<div class="card">
+  {% if employees %}
+  <table class="ledger">
+    <thead>
+      <tr><th>Employee</th><th>Department</th><th>Designation</th><th>Joined</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for e in employees %}
+      <tr>
+        <td><span class="emp-name">{{ e.name }}</span><br><span class="emp-code">{{ e.employee_code }} · {{ e.email }}</span></td>
+        <td>{{ e.department }}</td>
+        <td>{{ e.designation }}</td>
+        <td class="mono">{{ e.date_joined.strftime('%d %b %Y') if e.date_joined else '—' }}</td>
+        <td>
+          {% if e.is_active %}<span class="pill pill-present">Active</span>
+          {% else %}<span class="pill pill-inactive">Inactive</span>{% endif %}
+        </td>
+        <td>
+          <a href="{{ url_for('admin.edit_employee', employee_id=e.id) }}" class="btn btn-ghost btn-sm">Edit</a>
+          {% if e.is_active %}
+          <form method="POST" action="{{ url_for('admin.deactivate_employee', employee_id=e.id) }}" style="display:inline">
+            <button class="btn btn-danger-ghost btn-sm" type="submit">Deactivate</button>
+          </form>
+          {% else %}
+          <form method="POST" action="{{ url_for('admin.activate_employee', employee_id=e.id) }}" style="display:inline">
+            <button class="btn btn-ghost btn-sm" type="submit">Reactivate</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No employees match this filter yet.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

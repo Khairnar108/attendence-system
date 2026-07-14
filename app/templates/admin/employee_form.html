@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if employee else 'Add' }} Employee{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <p class="page-eyebrow">Roster</p>
+    <h1>{{ 'Edit employee' if employee else 'Add employee' }}</h1>
+  </div>
+</div>
+
+<div class="card">
+  <form method="POST" class="form-grid">
+    <label>
+      Employee code
+      <input type="text" name="employee_code" value="{{ employee.employee_code if employee else '' }}" placeholder="e.g. EMP-014" required />
+    </label>
+    <label>
+      Full name
+      <input type="text" name="name" value="{{ employee.name if employee else '' }}" required />
+    </label>
+    <label>
+      Email
+      <input type="email" name="email" value="{{ employee.email if employee else '' }}" required />
+    </label>
+    <label>
+      Department
+      <input type="text" name="department" value="{{ employee.department if employee else '' }}" placeholder="e.g. Operations" required />
+    </label>
+    <label>
+      Designation
+      <input type="text" name="designation" value="{{ employee.designation if employee else '' }}" placeholder="e.g. Floor Supervisor" required />
+    </label>
+
+    <div class="form-actions" style="grid-column: 1 / -1;">
+      <button type="submit" class="btn btn-primary">{{ 'Save changes' if employee else 'Add to roster' }}</button>
+      <a href="{{ url_for('admin.employees') }}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+
+  {% if not employee %}
+  <p style="margin-top:18px; font-size:12.5px; color: var(--text-muted);">
+    A login is created automatically once you save — the employee code becomes the login ID,
+    and a temporary passcode is generated. You'll see both after saving.
+  </p>
+  {% endif %}
+</div>
+
+{% endblock %}
