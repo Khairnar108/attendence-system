@@ -2,10 +2,10 @@
 
 A full attendance system built on Flask: admin/employee roles, a punch-clock
 check-in flow, a daily attendance ledger with CSV export, and an employee
-roster with auto-generated logins. Deployed automatically on every push to
+roster with  auto-generated logins. Deployed automatically on every push to
 GitHub via GitHub Actions → S3 → AWS CodeDeploy → EC2.
 
-## What's actually in here
+## What's actually in here you think
 
 - **Authentication** — Flask-Login, hashed passwords, two roles (`admin`, `employee`)
 - **Database** — SQLAlchemy models (`Employee`, `User`, `Attendance`), SQLite by default, swap to Postgres/MySQL by setting `DATABASE_URL`
