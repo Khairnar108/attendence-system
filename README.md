@@ -1,4 +1,4 @@
-# Register — Attendance Control System
+# Register  —  Attendance Control System
 
 A full attendance system built on Flask: admin/employee roles, a punch-clock
 check-in flow, a daily attendance ledger with CSV export, and an employee
