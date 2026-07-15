@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: ap-south-1
+      AWS_REGION: us-east-1
       APPLICATION_NAME: attendance-app
       DEPLOYMENT_GROUP: attendance-app-group
       S3_BUCKET: attendence-app-deploy-aniket
