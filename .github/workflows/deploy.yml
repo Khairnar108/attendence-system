@@ -65,7 +65,7 @@ jobs:
       AWS_REGION: ap-south-1
       APPLICATION_NAME: attendance-app
       DEPLOYMENT_GROUP: attendance-app-group
-      S3_BUCKET: attendance-app-deploy-aniket
+      S3_BUCKET: attendence-app-deploy-aniket
 
     steps:
       - name: Checkout source
