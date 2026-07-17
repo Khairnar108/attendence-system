@@ -228,3 +228,28 @@ Sign in with the admin credentials `seed.py` printed.
 - **No password-reset UI yet** — admin resets passcodes by editing the `User` row directly (see section 1) or you can add a reset route.
 - **IAM policies are broad** (`Full Access`) to keep first-time setup unblocked — scope them to the specific bucket/app before this holds real employee data.
 - **No HTTPS** — this serves plain HTTP on port 3000. Put it behind Nginx + Let's Encrypt or an Application Load Balancer with an ACM certificate before using it outside a private network.
+
+- <img width="1364" height="767" alt="Screenshot 2026-07-15 133557" src="https://github.com/user-attachments/assets/46c8bdb8-c905-47c4-9dc2-ce1f20f9553f" />
+<br>
+<img width="1363" height="766" alt="Screenshot 2026-07-15 133534" src="https://github.com/user-attachments/assets/7c0a30d7-160e-478a-b846-e4fbcd54453e" />
+<br>
+<img width="1365" height="767" alt="Screenshot 2026-07-15 133702" src="https://github.com/user-attachments/assets/de2ef3c9-db25-42c2-a769-6d2d023a8535" />
+<br>
+<img width="1364" height="766" alt="Screenshot 2026-07-15 133717" src="https://github.com/user-attachments/assets/47d8b279-6847-492a-b1bb-44bb4c28321c" />
+<br>
+<img width="1365" height="767" alt="Screenshot 2026-07-15 124143" src="https://github.com/user-attachments/assets/eadc3134-e87e-4fff-a971-fe5c97287dcc" />
+<br>
+<img width="1361" height="767" alt="Screenshot 2026-07-15 124322" src="https://github.com/user-attachments/assets/b1e060f4-64cd-4b5d-aa7d-d31a3c887d07" />
+<br>
+<img width="1365" height="767" alt="Screenshot 2026-07-15 124348" src="https://github.com/user-attachments/assets/ccf42f0b-0980-447d-83cc-fe1497268f43" />
+<br>
+<img width="1363" height="758" alt="Screenshot 2026-07-15 124420" src="https://github.com/user-attachments/assets/5d4f5263-8cff-4aad-a726-0cb5ff380e95" />
+<br>
+<img width="1365" height="751" alt="Screenshot 2026-07-15 124431" src="https://github.com/user-attachments/assets/eedcd28d-12b8-452f-a6c3-572d33f90a1d" />
+<br>
+<img width="1365" height="751" alt="Screenshot 2026-07-15 124431" src="https://github.com/user-attachments/assets/aa80d798-f7b0-45b7-91fc-f8728247ebd4" />
+<br>
+
+<img width="1365" height="767" alt="Screenshot 2026-07-15 131256" src="https://github.com/user-attachments/assets/4ddbca15-344a-4bb1-b3c9-d2464c378c28" />
+<br>
+
